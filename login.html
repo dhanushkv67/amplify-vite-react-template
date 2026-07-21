@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animated Login</title>
+    <link rel="stylesheet" href="login.css" />
+  </head>
+  <body>
+    <main class="login-shell">
+      <section class="intro-panel" aria-label="Welcome message">
+        <p class="eyebrow">Secure Access</p>
+        <h1>Welcome back</h1>
+        <p class="intro-copy">
+          Sign in to continue to your workspace and keep your projects moving.
+        </p>
+        <div class="activity-line" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </section>
+
+      <section class="login-card" aria-label="Login form">
+        <p class="eyebrow">Member Login</p>
+        <h2>Sign in</h2>
+
+        <form>
+          <label for="email">Email address</label>
+          <input id="email" type="email" placeholder="you@example.com" autocomplete="email" />
+
+          <label for="password">Password</label>
+          <input id="password" type="password" placeholder="Enter your password" autocomplete="current-password" />
+
+          <div class="form-options">
+            <label class="check-row" for="remember">
+              <input id="remember" type="checkbox" />
+              <span>Remember me</span>
+            </label>
+            <a href="#forgot-password">Forgot password?</a>
+          </div>
+
+          <button type="submit">Sign in</button>
+        </form>
+
+        <p class="signup-text">New here? <a href="#create-account">Create account</a></p>
+      </section>
+    </main>
+  </body>
+</html>
