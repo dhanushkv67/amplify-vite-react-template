@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Template</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f3f7ff;
+        --card: #ffffff;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --primary: #2563eb;
+        --primary-dark: #1d4ed8;
+        --border: #dbe3f0;
+        --success-bg: #ecfdf5;
+        --success-text: #065f46;
+        --error-bg: #fef2f2;
+        --error-text: #991b1b;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(135deg, #dbeafe, var(--bg));
+        color: var(--text);
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      .card {
+        width: min(100%, 420px);
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: 0 20px 45px rgba(37, 99, 235, 0.12);
+        padding: 32px;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 1.9rem;
+      }
+
+      p {
+        margin: 0 0 24px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      form {
+        display: grid;
+        gap: 16px;
+      }
+
+      label {
+        font-weight: 700;
+        display: grid;
+        gap: 8px;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 1rem;
+      }
+
+      input:focus {
+        outline: 3px solid rgba(37, 99, 235, 0.18);
+        border-color: var(--primary);
+      }
+
+      button {
+        border: 0;
+        border-radius: 10px;
+        padding: 13px 16px;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #fff;
+        background: var(--primary);
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+
+      button:hover {
+        background: var(--primary-dark);
+      }
+
+      .message {
+        margin-top: 18px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        display: none;
+      }
+
+      .message.success {
+        display: block;
+        background: var(--success-bg);
+        color: var(--success-text);
+      }
+
+      .message.error {
+        display: block;
+        background: var(--error-bg);
+        color: var(--error-text);
+      }
+
+      .saved-session {
+        margin-top: 18px;
+        font-size: 0.95rem;
+        color: var(--muted);
+      }
+
+      .saved-session strong {
+        color: var(--text);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>Welcome back</h1>
+      <p>Use this simple login template to capture a username and keep the active session in the browser.</p>
+
+      <form id="loginForm">
+        <label>
+          Username
+          <input id="username" name="username" type="text" placeholder="Enter your username" autocomplete="username" required />
+        </label>
+
+        <label>
+          Password
+          <input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required />
+        </label>
+
+        <button type="submit">Log in</button>
+      </form>
+
+      <div id="message" class="message" role="status" aria-live="polite"></div>
+      <div id="savedSession" class="saved-session"></div>
+    </main>
+
+    <script>
+      const form = document.getElementById('loginForm');
+      const message = document.getElementById('message');
+      const savedSession = document.getElementById('savedSession');
+      const storageKey = 'login-session';
+
+      function renderSavedSession() {
+        const raw = sessionStorage.getItem(storageKey);
+
+        if (!raw) {
+          savedSession.textContent = 'No active session stored yet.';
+          return;
+        }
+
+        const session = JSON.parse(raw);
+        savedSession.innerHTML = `Active session for <strong>${session.username}</strong>.`;
+      }
+
+      function showMessage(text, type) {
+        message.textContent = text;
+        message.className = `message ${type}`;
+      }
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const username = form.username.value.trim();
+        const password = form.password.value.trim();
+
+        if (!username || !password) {
+          showMessage('Please enter both a username and password.', 'error');
+          return;
+        }
+
+        sessionStorage.setItem(
+          storageKey,
+          JSON.stringify({
+            username,
+            password,
+            savedAt: new Date().toISOString(),
+          })
+        );
+
+        showMessage(`Logged in as ${username}. Session saved for this browser tab.`, 'success');
+        renderSavedSession();
+        form.reset();
+      });
+
+      renderSavedSession();
+    </script>
+  </body>
+</html>
