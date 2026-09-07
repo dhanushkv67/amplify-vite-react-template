@@ -3,21 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login Template</title>
+    <title>SecureSign Auth</title>
     <style>
       :root {
         color-scheme: light;
-        --bg: #f3f7ff;
-        --card: #ffffff;
-        --text: #1f2937;
-        --muted: #6b7280;
-        --primary: #2563eb;
-        --primary-dark: #1d4ed8;
+        --bg-start: #eef2ff;
+        --bg-mid: #f8fafc;
+        --bg-end: #dbeafe;
+        --card: rgba(255, 255, 255, 0.92);
+        --text: #0f172a;
+        --muted: #64748b;
+        --primary: #4f46e5;
+        --primary-dark: #4338ca;
+        --primary-soft: #e0e7ff;
         --border: #dbe3f0;
         --success-bg: #ecfdf5;
-        --success-text: #065f46;
+        --success-text: #047857;
         --error-bg: #fef2f2;
-        --error-text: #991b1b;
+        --error-text: #b91c1c;
+        --shadow: 0 28px 80px rgba(79, 70, 229, 0.18);
       }
 
       * {
@@ -27,79 +31,236 @@
       body {
         margin: 0;
         min-height: 100vh;
-        font-family: Arial, Helvetica, sans-serif;
-        background: linear-gradient(135deg, #dbeafe, var(--bg));
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(129, 140, 248, 0.28), transparent 34rem),
+          linear-gradient(135deg, var(--bg-start), var(--bg-mid) 46%, var(--bg-end));
         color: var(--text);
         display: grid;
         place-items: center;
         padding: 24px;
       }
 
-      .card {
-        width: min(100%, 420px);
+      .auth-shell {
+        width: min(100%, 980px);
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        border: 1px solid rgba(219, 227, 240, 0.8);
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
         background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 18px;
-        box-shadow: 0 20px 45px rgba(37, 99, 235, 0.12);
-        padding: 32px;
+        backdrop-filter: blur(16px);
       }
 
-      h1 {
+      .hero-panel {
+        padding: 48px;
+        background:
+          linear-gradient(145deg, rgba(79, 70, 229, 0.95), rgba(37, 99, 235, 0.9)),
+          url("data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 79h80M79 0v80' stroke='%23ffffff' stroke-opacity='.12'/%3E%3C/svg%3E");
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 620px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+
+      .brand-mark {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.18);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+      }
+
+      .hero-copy h1 {
+        margin: 0 0 18px;
+        max-width: 12ch;
+        font-size: clamp(2.6rem, 6vw, 4.8rem);
+        line-height: 0.94;
+        letter-spacing: -0.07em;
+      }
+
+      .hero-copy p {
+        margin: 0;
+        max-width: 31rem;
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 1.05rem;
+        line-height: 1.7;
+      }
+
+      .feature-list {
+        display: grid;
+        gap: 14px;
+        margin: 36px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .feature-list li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: rgba(255, 255, 255, 0.88);
+      }
+
+      .check {
+        width: 24px;
+        height: 24px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.18);
+        font-size: 0.8rem;
+      }
+
+      .auth-panel {
+        padding: 42px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .panel-heading {
+        margin-bottom: 24px;
+      }
+
+      .eyebrow {
         margin: 0 0 8px;
-        font-size: 1.9rem;
+        color: var(--primary);
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
       }
 
-      p {
-        margin: 0 0 24px;
+      .panel-heading h2 {
+        margin: 0 0 10px;
+        font-size: 2rem;
+        letter-spacing: -0.04em;
+      }
+
+      .panel-heading p {
+        margin: 0;
         color: var(--muted);
-        line-height: 1.5;
+        line-height: 1.55;
+      }
+
+      .tabs {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        padding: 6px;
+        border-radius: 16px;
+        background: #f1f5f9;
+        margin-bottom: 22px;
+      }
+
+      .tab-button {
+        border: 0;
+        border-radius: 12px;
+        padding: 11px 14px;
+        background: transparent;
+        color: var(--muted);
+        font-size: 0.96rem;
+        font-weight: 800;
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+
+      .tab-button[aria-selected="true"] {
+        background: #fff;
+        color: var(--primary);
+        box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
       }
 
       form {
         display: grid;
-        gap: 16px;
+        gap: 15px;
+      }
+
+      .form-grid {
+        display: grid;
+        gap: 15px;
       }
 
       label {
-        font-weight: 700;
         display: grid;
         gap: 8px;
+        color: #334155;
+        font-size: 0.95rem;
+        font-weight: 800;
       }
 
       input {
         width: 100%;
-        padding: 12px 14px;
+        padding: 13px 14px;
         border: 1px solid var(--border);
-        border-radius: 10px;
-        font-size: 1rem;
+        border-radius: 13px;
+        background: #fff;
+        color: var(--text);
+        font: inherit;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      input::placeholder {
+        color: #94a3b8;
       }
 
       input:focus {
-        outline: 3px solid rgba(37, 99, 235, 0.18);
+        outline: 0;
         border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.14);
       }
 
-      button {
+      .submit-button {
         border: 0;
-        border-radius: 10px;
-        padding: 13px 16px;
-        font-size: 1rem;
-        font-weight: 700;
+        border-radius: 14px;
+        padding: 14px 16px;
         color: #fff;
-        background: var(--primary);
+        background: linear-gradient(135deg, var(--primary), #2563eb);
+        font-size: 1rem;
+        font-weight: 900;
         cursor: pointer;
-        transition: background 0.2s ease;
+        box-shadow: 0 14px 28px rgba(79, 70, 229, 0.24);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
       }
 
-      button:hover {
-        background: var(--primary-dark);
+      .submit-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 18px 32px rgba(79, 70, 229, 0.3);
+      }
+
+      .secondary-button {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 10px 12px;
+        background: #fff;
+        color: var(--primary-dark);
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .auth-form[hidden] {
+        display: none;
       }
 
       .message {
         margin-top: 18px;
-        padding: 12px 14px;
-        border-radius: 10px;
+        padding: 13px 14px;
+        border-radius: 13px;
         display: none;
+        line-height: 1.45;
       }
 
       .message.success {
@@ -114,56 +275,169 @@
         color: var(--error-text);
       }
 
-      .saved-session {
+      .session-card {
         margin-top: 18px;
-        font-size: 0.95rem;
+        padding: 16px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: #f8fafc;
         color: var(--muted);
+        line-height: 1.5;
       }
 
-      .saved-session strong {
+      .session-card strong {
         color: var(--text);
+      }
+
+      .session-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .hint {
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 0.86rem;
+        line-height: 1.5;
+      }
+
+      @media (max-width: 820px) {
+        .auth-shell {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-panel {
+          min-height: auto;
+          gap: 44px;
+          padding: 34px;
+        }
+
+        .hero-copy h1 {
+          max-width: none;
+        }
+
+        .auth-panel {
+          padding: 32px 24px;
+        }
       }
     </style>
   </head>
   <body>
-    <main class="card">
-      <h1>Welcome back</h1>
-      <p>Use this simple login template to capture a username and keep the active session in the browser.</p>
+    <main class="auth-shell" aria-labelledby="authTitle">
+      <section class="hero-panel" aria-label="Authentication benefits">
+        <div class="brand" aria-label="SecureSign">
+          <span class="brand-mark" aria-hidden="true">🔐</span>
+          <span>SecureSign</span>
+        </div>
 
-      <form id="loginForm">
-        <label>
-          Username
-          <input id="username" name="username" type="text" placeholder="Enter your username" autocomplete="username" required />
-        </label>
+        <div class="hero-copy">
+          <h1>Welcome in.</h1>
+          <p>Create an account, save your demo credentials in this browser, and sign back in with a clean, friendly authentication flow.</p>
+          <ul class="feature-list">
+            <li><span class="check" aria-hidden="true">✓</span> Polished login and registration screens</li>
+            <li><span class="check" aria-hidden="true">✓</span> Browser-backed credential demo</li>
+            <li><span class="check" aria-hidden="true">✓</span> Clear success, error, and session states</li>
+          </ul>
+        </div>
+      </section>
 
-        <label>
-          Password
-          <input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required />
-        </label>
+      <section class="auth-panel">
+        <div class="panel-heading">
+          <p class="eyebrow">Demo authentication</p>
+          <h2 id="authTitle">Sign in or register</h2>
+          <p>Use the tabs below to create credentials, then log in with the same username and password.</p>
+        </div>
 
-        <button type="submit">Log in</button>
-      </form>
+        <div class="tabs" role="tablist" aria-label="Authentication mode">
+          <button class="tab-button" id="loginTab" type="button" role="tab" aria-controls="loginForm" aria-selected="true">Log in</button>
+          <button class="tab-button" id="registerTab" type="button" role="tab" aria-controls="registerForm" aria-selected="false">Register</button>
+        </div>
 
-      <div id="message" class="message" role="status" aria-live="polite"></div>
-      <div id="savedSession" class="saved-session"></div>
+        <form id="loginForm" class="auth-form" autocomplete="on">
+          <div class="form-grid">
+            <label>
+              Username
+              <input id="loginUsername" name="username" type="text" placeholder="e.g. dhanush" autocomplete="username" required />
+            </label>
+
+            <label>
+              Password
+              <input id="loginPassword" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required />
+            </label>
+          </div>
+
+          <button class="submit-button" type="submit">Log in</button>
+        </form>
+
+        <form id="registerForm" class="auth-form" autocomplete="on" hidden>
+          <div class="form-grid">
+            <label>
+              Username
+              <input id="registerUsername" name="username" type="text" minlength="3" placeholder="Choose a username" autocomplete="username" required />
+            </label>
+
+            <label>
+              Email
+              <input id="registerEmail" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
+            </label>
+
+            <label>
+              Password
+              <input id="registerPassword" name="password" type="password" minlength="6" placeholder="At least 6 characters" autocomplete="new-password" required />
+            </label>
+
+            <label>
+              Confirm password
+              <input id="confirmPassword" name="confirmPassword" type="password" minlength="6" placeholder="Repeat password" autocomplete="new-password" required />
+            </label>
+          </div>
+
+          <button class="submit-button" type="submit">Create account</button>
+        </form>
+
+        <div id="message" class="message" role="status" aria-live="polite"></div>
+        <div id="sessionCard" class="session-card" aria-live="polite"></div>
+        <p class="hint">Note: this is a front-end demo that stores credentials in browser storage for prototype purposes only.</p>
+      </section>
     </main>
 
     <script>
-      const form = document.getElementById('loginForm');
+      const loginTab = document.getElementById('loginTab');
+      const registerTab = document.getElementById('registerTab');
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
       const message = document.getElementById('message');
-      const savedSession = document.getElementById('savedSession');
-      const storageKey = 'login-session';
+      const sessionCard = document.getElementById('sessionCard');
 
-      function renderSavedSession() {
-        const raw = sessionStorage.getItem(storageKey);
+      const usersStorageKey = 'auth-demo-users';
+      const sessionStorageKey = 'auth-demo-session';
 
-        if (!raw) {
-          savedSession.textContent = 'No active session stored yet.';
-          return;
+      function normalizeUsername(username) {
+        return username.trim().toLowerCase();
+      }
+
+      function getUsers() {
+        try {
+          return JSON.parse(localStorage.getItem(usersStorageKey)) || {};
+        } catch (error) {
+          return {};
         }
+      }
 
-        const session = JSON.parse(raw);
-        savedSession.innerHTML = `Active session for <strong>${session.username}</strong>.`;
+      function saveUsers(users) {
+        localStorage.setItem(usersStorageKey, JSON.stringify(users));
+      }
+
+      function setMode(mode) {
+        const isLogin = mode === 'login';
+        loginForm.hidden = !isLogin;
+        registerForm.hidden = isLogin;
+        loginTab.setAttribute('aria-selected', String(isLogin));
+        registerTab.setAttribute('aria-selected', String(!isLogin));
+        clearMessage();
       }
 
       function showMessage(text, type) {
@@ -171,32 +445,116 @@
         message.className = `message ${type}`;
       }
 
-      form.addEventListener('submit', (event) => {
-        event.preventDefault();
+      function clearMessage() {
+        message.textContent = '';
+        message.className = 'message';
+      }
 
-        const username = form.username.value.trim();
-        const password = form.password.value.trim();
+      function setSession(user) {
+        sessionStorage.setItem(
+          sessionStorageKey,
+          JSON.stringify({
+            username: user.username,
+            email: user.email,
+            loggedInAt: new Date().toISOString(),
+          })
+        );
+        renderSession();
+      }
 
-        if (!username || !password) {
-          showMessage('Please enter both a username and password.', 'error');
+      function getSession() {
+        try {
+          return JSON.parse(sessionStorage.getItem(sessionStorageKey));
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function renderSession() {
+        const session = getSession();
+
+        if (!session) {
+          sessionCard.innerHTML = 'No active session yet. Register or log in to start one.';
           return;
         }
 
-        sessionStorage.setItem(
-          storageKey,
-          JSON.stringify({
-            username,
-            password,
-            savedAt: new Date().toISOString(),
-          })
-        );
+        sessionCard.innerHTML = `
+          <strong>Signed in as ${session.username}</strong><br />
+          ${session.email}<br />
+          <div class="session-actions">
+            <span>Session saved for this tab.</span>
+            <button class="secondary-button" id="logoutButton" type="button">Log out</button>
+          </div>
+        `;
 
-        showMessage(`Logged in as ${username}. Session saved for this browser tab.`, 'success');
-        renderSavedSession();
-        form.reset();
+        document.getElementById('logoutButton').addEventListener('click', () => {
+          sessionStorage.removeItem(sessionStorageKey);
+          showMessage('You have been logged out.', 'success');
+          renderSession();
+        });
+      }
+
+      registerForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const username = registerForm.username.value.trim();
+        const key = normalizeUsername(username);
+        const email = registerForm.email.value.trim();
+        const password = registerForm.password.value;
+        const confirmPassword = registerForm.confirmPassword.value;
+        const users = getUsers();
+
+        if (!username || !email || !password || !confirmPassword) {
+          showMessage('Please complete every registration field.', 'error');
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          showMessage('Passwords do not match. Please try again.', 'error');
+          return;
+        }
+
+        if (users[key]) {
+          showMessage('That username is already registered. Try logging in instead.', 'error');
+          return;
+        }
+
+        users[key] = {
+          username,
+          email,
+          password,
+          createdAt: new Date().toISOString(),
+        };
+        saveUsers(users);
+        setSession(users[key]);
+        registerForm.reset();
+        setMode('login');
+        document.getElementById('loginUsername').value = username;
+        showMessage(`Account created for ${username}. You are now signed in.`, 'success');
       });
 
-      renderSavedSession();
+      loginForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const username = loginForm.username.value.trim();
+        const key = normalizeUsername(username);
+        const password = loginForm.password.value;
+        const user = getUsers()[key];
+
+        if (!user || user.password !== password) {
+          showMessage('Invalid username or password. Register first or check your credentials.', 'error');
+          return;
+        }
+
+        setSession(user);
+        showMessage(`Welcome back, ${user.username}!`, 'success');
+        loginForm.reset();
+      });
+
+      loginTab.addEventListener('click', () => setMode('login'));
+      registerTab.addEventListener('click', () => setMode('register'));
+
+      renderSession();
     </script>
   </body>
 </html>
