@@ -1,0 +1,19 @@
+name: Engineering UI smoke
+on:
+  push:
+    branches: ["ci/engineering-ui-base", "agentgov/**"]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  engineering-ui-smoke:
+    name: Engineering UI smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run independent acceptance tests
+        run: node --test tests/ci-smoke.test.cjs
