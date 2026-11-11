@@ -1,0 +1,22 @@
+.board-page { max-width: 90rem; margin: auto; padding: 1rem; color: #182235; }
+.board-header, .board-controls, .task-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
+.board-header { justify-content: space-between; }
+.board-columns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
+.board-column { background: #f2f5f9; border-radius: .5rem; padding: 1rem; min-width: 0; }
+.board-column ul { list-style: none; padding: 0; margin: 0; display: grid; gap: .75rem; }
+.board-card, .task-detail, .task-form { background: #fff; border: 1px solid #ced6e0; border-radius: .5rem; padding: 1rem; overflow-wrap: anywhere; }
+.board-card h3 { margin: 0 0 .5rem; }
+.board-card p { margin: .25rem 0; }
+.board-error { padding: .75rem; border: 1px solid #b62536; background: #fff0f2; color: #8e1221; }
+.task-form { display: grid; gap: .75rem; max-width: 38rem; }
+.task-form label { display: grid; gap: .25rem; }
+.task-form input, .task-form textarea, .task-form select { box-sizing: border-box; width: 100%; padding: .6rem; font: inherit; }
+.board-page button { padding: .55rem .8rem; min-height: 2.5rem; cursor: pointer; }
+.board-page a:focus-visible, .board-page button:focus-visible, .task-form :focus-visible { outline: 3px solid #1759ba; outline-offset: 2px; }
+@media (max-width: 700px) {
+  .board-page { padding: .75rem; }
+  .board-columns { grid-template-columns: minmax(0, 1fr); }
+  .board-header { align-items: flex-start; }
+  .board-controls { width: 100%; }
+  .board-controls button { flex: 1; }
+}
