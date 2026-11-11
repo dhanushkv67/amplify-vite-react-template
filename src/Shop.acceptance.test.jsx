@@ -141,7 +141,7 @@ test("test_ac12_unreadable_saved_cart_recovers_to_empty", () => {
 });
 
 test("test_ac13_fixed_catalog_no_new_dependencies_or_remote_product_data", () => {
-  const manifest = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
+  const manifest = JSON.parse(readFileSync("package.json", "utf8"));
   expect(manifest.dependencies).toEqual({ react: "18.3.1", "react-dom": "18.3.1" });
   expect(Object.keys(manifest.devDependencies).sort()).toEqual([
     "@vitejs/plugin-react", "@testing-library/dom", "@testing-library/jest-dom",
@@ -156,6 +156,6 @@ test("test_ac13_fixed_catalog_no_new_dependencies_or_remote_product_data", () =>
 
 test("test_ac14_shop_behaviors_execute_in_existing_vitest_runner", () => {
   mount(); add("Pen"); quantity("Pen", 1); total(2);
-  const manifest = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
+  const manifest = JSON.parse(readFileSync("package.json", "utf8"));
   expect(manifest.scripts.test).toBe("vitest run");
 });
