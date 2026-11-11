@@ -18,6 +18,10 @@ export async function projectApi<T>(path: string, init?: RequestInit): Promise<T
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [name, setName] = useState('');
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<{ id: string; projectId: string; projectName: string; title: string }[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [searchError, setSearchError] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -29,6 +33,17 @@ export default function ProjectsPage() {
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, []);
+
+  async function search(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSearching(true); setSearchError(''); setResults([]);
+    try {
+      const response = await fetch(`/api/tasks/search?q=${encodeURIComponent(query.trim())}`, { credentials: 'include' });
+      if (!response.ok) throw new Error('Could not search tasks');
+      setResults(await response.json() as typeof results);
+    } catch (reason) { setSearchError((reason as Error).message); }
+    finally { setSearching(false); }
+  }
 
   async function create(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -46,6 +61,15 @@ export default function ProjectsPage() {
 
   return <main>
     <h1>Projects</h1>
+    <form role="search" onSubmit={search}>
+      <label htmlFor="task-search">Search tasks</label>{' '}
+      <input id="task-search" type="search" value={query} onChange={event => setQuery(event.target.value)} />{' '}
+      <button type="submit" disabled={searching}>{searching ? 'Searching…' : 'Search'}</button>
+    </form>
+    {searchError && <p role="alert">{searchError}</p>}
+    {results.length > 0 && <section aria-label="Task search results"><ul>{results.map(task =>
+      <li key={`${task.projectId}-${task.id}`}><a href={`/projects/${encodeURIComponent(task.projectId)}/tasks/${encodeURIComponent(task.id)}`}>
+        {task.title}</a> — {task.projectName}</li>)}</ul></section>}
     <form onSubmit={create}>
       <label htmlFor="project-name">Project name</label>{' '}
       <input id="project-name" value={name} onChange={event => setName(event.target.value)} required />{' '}

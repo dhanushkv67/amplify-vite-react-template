@@ -108,3 +108,37 @@ export function createTasksRouter({ db, requireAuth, requireProjectMember, getUs
   router.patch('/:taskId', (req, res) => { void save(req, res, false); });
   return router;
 }
+
+/** Global search is session-scoped; SQL enforces membership on each matching row. */
+export function createTaskSearchRouter({ db, requireAuth, getUserId }: {
+  db: Pick<Pool, 'query'>;
+  requireAuth: RequestHandler;
+  getUserId: (request: Request) => string | number | undefined;
+}) {
+  const router = Router();
+  router.use(requireAuth);
+  router.get('/search', async (req, res) => {
+    const user = positiveId(getUserId(req));
+    if (!user) return res.status(401).json({ error: 'Authentication required' });
+    const term = req.query.q;
+    if (typeof term !== 'string' || term.trim().length > 200) return res.status(400).json({ error: 'Invalid search term' });
+    if (!term.trim()) return res.json([]);
+    try {
+      const found = await db.query(`SELECT t.id::text AS id, t.project_id::text AS "projectId",
+        p.name AS "projectName", t.title, t.description, t.status,
+        t.assignee_id::text AS "assigneeId", u.email AS "assigneeEmail",
+        to_char(t.due_date, 'YYYY-MM-DD') AS "dueDate"
+        FROM tasks t JOIN projects p ON p.id = t.project_id
+        JOIN project_memberships pm ON pm.project_id = t.project_id AND pm.user_id = $1
+        LEFT JOIN users u ON u.id = t.assignee_id
+        WHERE strpos(lower(t.title), lower($2)) > 0
+           OR strpos(lower(t.description), lower($2)) > 0
+        ORDER BY t.id DESC LIMIT 100`, [user, term.trim()]);
+      res.json(found.rows.map(row => ({ ...row, status: statusFromDatabase[String(row.status)] })));
+    } catch (error) {
+      console.error('Task search failed', error);
+      res.status(500).json({ error: 'Task search failed' });
+    }
+  });
+  return router;
+}
