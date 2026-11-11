@@ -1,0 +1,56 @@
+# Run from the repository root: docker compose -f deploy/compose.https.yaml up --build -d
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-app}
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a unique secret in .env}
+    volumes: [db_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+  api:
+    build:
+      context: ..
+      dockerfile: Dockerfile.api
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      APP_ORIGIN: https://${SITE_DOMAIN:?Set the public DNS name}
+      PGHOST: db
+      PGPORT: 5432
+      PGDATABASE: ${POSTGRES_DB:-app}
+      PGUSER: ${POSTGRES_USER:-app}
+      PGPASSWORD: ${POSTGRES_PASSWORD:?Set a unique secret in .env}
+    depends_on:
+      db: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+  web:
+    build:
+      context: ..
+      dockerfile: Dockerfile.web
+    environment:
+      API_PROXY_TARGET: http://api:3000
+    depends_on:
+      api: {condition: service_healthy}
+  caddy:
+    image: caddy:2-alpine
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN:?Set the public DNS name}
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on: [web]
+volumes:
+  db_data:
+  caddy_data:
+  caddy_config:

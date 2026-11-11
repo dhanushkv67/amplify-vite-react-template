@@ -12,6 +12,13 @@ import { createCommentsRouter } from './routes/comments.js';
 export function createApp({ db }: { db: Pick<Pool, 'query' | 'connect'> }) {
   const app = express();
   app.disable('x-powered-by');
+  app.use((_request, response, next) => {
+    response.set('X-Content-Type-Options', 'nosniff');
+    response.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+    response.set('X-Frame-Options', 'DENY');
+    response.set('Cache-Control', 'no-store');
+    next();
+  });
   app.use(express.json());
   app.use('/api', requireSameOrigin);
   app.get('/api/health', async (_request, response) => {
