@@ -7,5 +7,5 @@ RUN npm ci --include=dev --ignore-scripts --no-audit --no-fund
 COPY apps/web/index.html ./apps/web/index.html
 COPY apps/web/src ./apps/web/src
 COPY apps/web/vite.config.ts ./apps/web/vite.config.ts
-RUN ./node_modules/.bin/vite build --config apps/web/vite.config.ts
-CMD ["./node_modules/.bin/vite", "preview", "--config", "apps/web/vite.config.ts", "--host", "0.0.0.0", "--port", "4173"]
+RUN npm run build --workspace @task-tracker/web
+CMD ["npm", "run", "preview", "--workspace", "@task-tracker/web"]
