@@ -3,8 +3,17 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "workspaces": ["apps/api", "apps/web"],
-  "scripts": { "test": "vitest run" },
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p apps/api/tsconfig.json && tsc --noEmit -p apps/web/tsconfig.json",
+    "test:e2e": "playwright test",
+    "dev:api": "tsx apps/api/src/server.ts",
+    "dev:web": "vite --config apps/web/vite.config.ts"
+  },
   "devDependencies": {
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
@@ -13,6 +22,16 @@
     "supertest": "^7.1.4",
     "pg": "^8.16.3",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "typescript": "^5.8.3",
+    "tsx": "^4.20.3",
+    "@types/node": "^22.15.30",
+    "@types/pg": "^8.15.5",
+    "@types/express": "^5.0.2",
+    "@types/supertest": "^6.0.3",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.6",
+    "@playwright/test": "^1.55.0"
   }
 }
+
