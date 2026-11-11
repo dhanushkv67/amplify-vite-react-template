@@ -6,6 +6,7 @@ import { requireAuth } from './middleware/requireAuth.js';
 import { createProjectsRouter } from './routes/projects.js';
 import { createProjectAccess } from './middleware/projectAccess.js';
 import { createTasksRouter } from './routes/tasks.js';
+import { createCommentsRouter } from './routes/comments.js';
 
 /** Construct the application without opening sockets or requiring a live database. */
 export function createApp({ db }: { db: Pick<Pool, 'query' | 'connect'> }) {
@@ -27,5 +28,6 @@ export function createApp({ db }: { db: Pick<Pool, 'query' | 'connect'> }) {
   const access = createProjectAccess(db, userId);
   app.use('/api/projects', createProjectsRouter({ db, requireAuth: auth, getUserId: userId }));
   app.use('/api/projects/:projectId/tasks', createTasksRouter({ db, requireAuth: auth, requireProjectMember: access.requireMember, getUserId: userId }));
+  app.use('/api/projects/:projectId/tasks/:taskId/comments', createCommentsRouter({ db, requireAuth: auth, requireProjectMember: access.requireMember, getAuthenticatedUserId: userId }));
   return app;
 }

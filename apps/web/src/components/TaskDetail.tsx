@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Comments from './Comments';
 import TaskForm, { type Member, type Task, type TaskPayload } from './TaskForm';
 
 type Props = { projectId: string; taskId: string; members: Member[]; onChange?: (task: Task) => void; onBack?: () => void };
@@ -34,6 +35,7 @@ export default function TaskDetail({ projectId, taskId, members, onChange, onBac
     <h2>{task.title}</h2><p>{task.description || 'No description'}</p>
     <dl><dt>Status</dt><dd>{task.status}</dd><dt>Assignee</dt><dd>{task.assigneeEmail || 'Unassigned'}</dd>
       <dt>Due date</dt><dd>{task.dueDate || 'None'}</dd></dl>
+    <Comments projectId={projectId} taskId={taskId} />
     {editing ? <TaskForm key={task.id + task.status + task.title} task={task} members={members} onSave={save} onCancel={() => setEditing(false)} />
       : <button type="button" onClick={() => setEditing(true)}>Edit task</button>}
   </section>;
