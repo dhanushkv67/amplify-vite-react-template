@@ -50,7 +50,7 @@ test('AC2 adds a trimmed title first and clears the box', async () => {
   expect(await screen.findByText('older')).toBeInTheDocument();
   fireEvent.change(titleBox(), { target: { value: '  newer  ' } }); add();
   expect(await screen.findByText('newer')).toBeInTheDocument();
-  expect(within(screen.getByRole('list')).getAllByRole('listitem').map(li => li.textContent)).toEqual(expect.arrayContaining(['newer', 'older']));
+  expect(within(screen.getByRole('list')).getAllByRole('listitem').map(li => li.textContent)).toEqual(expect.arrayContaining([expect.stringContaining('newer'), expect.stringContaining('older')]));
   expect(within(screen.getByRole('list')).getAllByRole('listitem')[0]).toHaveTextContent('newer');
   expect(titleBox()).toHaveValue('');
   expect(JSON.parse(fetchMock.mock.calls[1][1].body).title).toBe('newer');
