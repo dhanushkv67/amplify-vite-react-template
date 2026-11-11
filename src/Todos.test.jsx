@@ -53,6 +53,7 @@ test('AC4 checks and reopens a todo, toggling strike-through', async () => {
     .mockResolvedValueOnce(response(todo(1, 'write', false)));
   await mount(fetchMock);
   const checkbox = await screen.findByRole('checkbox');
+  expect(screen.getByRole('button', { name: /delete/i })).toBeInTheDocument();
   expect(screen.getByText('write')).not.toHaveStyle({ textDecoration: 'line-through' });
   fireEvent.click(checkbox);
   await waitFor(() => expect(screen.getByRole('checkbox')).toBeChecked());
@@ -91,6 +92,12 @@ test('AC12 loads via API and preserves the list with an error when server is una
   expect(screen.queryByText('lost')).not.toBeInTheDocument();
   expect(fetchMock.mock.calls[0][0]).toContain('/api/todos');
   expect(fetchMock.mock.calls[1][0]).toContain('/api/todos');
+  cleanup();
+  const unavailable = vi.fn().mockRejectedValue(new Error('offline'));
+  await mount(unavailable);
+  expect(await screen.findByText(/error|unavailable|failed/i)).toBeInTheDocument();
+  expect(screen.queryByRole('listitem')).not.toBeInTheDocument();
+  expect(unavailable.mock.calls[0][0]).toContain('/api/todos');
 });
 
 test('AC13 preserves cart toggle and total in the combined app', async () => {
