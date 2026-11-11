@@ -1,6 +1,19 @@
 import { afterEach, expect, test, vi } from 'vitest';
-import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
+
+const mainRoots = vi.hoisted(() => []);
+vi.mock('react-dom/client', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    createRoot(container, ...options) {
+      const root = actual.createRoot(container, ...options);
+      if (container.id === 'root') mainRoots.push(root);
+      return root;
+    },
+  };
+});
 
 const saved = (rows) => ({ ok: true, status: 200, json: async () => rows });
 const response = (row, status = 200) => ({ ok: true, status, json: async () => row });
@@ -13,7 +26,12 @@ async function mount(fetchMock) {
 const loading = (rows = []) => vi.fn().mockResolvedValueOnce(saved(rows));
 const titleBox = () => screen.getByRole('textbox');
 const add = () => fireEvent.click(screen.getByRole('button', { name: /^add$/i }));
-afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.resetModules(); });
+afterEach(() => {
+  act(() => { for (const root of mainRoots.splice(0)) root.unmount(); });
+  cleanup();
+  vi.unstubAllGlobals();
+  vi.resetModules();
+});
 
 test('AC1 shows Todos input, Add and list alongside Cart', async () => {
   vi.stubGlobal('fetch', loading());
