@@ -10,6 +10,8 @@ const catalog = Object.freeze([
 ]);
 const storageKey = "shop-cart-v1:cart";
 const knownIds = new Set(catalog.map(({ id }) => id));
+// Even a full cart stays well within exact integer-dollar arithmetic.
+const maxQuantity = 1000;
 
 function readCart() {
   try {
@@ -19,9 +21,9 @@ function readCart() {
     if (!Array.isArray(saved)) return [];
     const quantities = new Map();
     for (const entry of saved) {
-      if (!entry || !knownIds.has(entry.id) || !Number.isSafeInteger(entry.quantity) || entry.quantity <= 0) continue;
+      if (!entry || !knownIds.has(entry.id) || !Number.isSafeInteger(entry.quantity) || entry.quantity <= 0 || entry.quantity > maxQuantity) continue;
       const next = (quantities.get(entry.id) || 0) + entry.quantity;
-      if (Number.isSafeInteger(next)) quantities.set(entry.id, next);
+      if (next <= maxQuantity) quantities.set(entry.id, next);
     }
     return [...quantities].map(([id, quantity]) => ({ id, quantity }));
   } catch {
@@ -44,7 +46,7 @@ export default function Cart() {
   function changeQuantity(id, delta) {
     setItems((current) => {
       const quantity = current.find((item) => item.id === id)?.quantity || 0;
-      if (delta > 0 && quantity >= Number.MAX_SAFE_INTEGER) return current;
+      if (delta > 0 && quantity >= maxQuantity) return current;
       if (quantity === 0 && delta < 0) return current;
       if (quantity === 0) return [...current, { id, quantity: 1 }];
       if (quantity === 1 && delta < 0) return current.filter((item) => item.id !== id);
