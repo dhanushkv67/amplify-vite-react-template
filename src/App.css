@@ -1,0 +1,8 @@
+.todo-item {
+  padding: 8px 12px;
+  list-style: none;
+}
+
+.todo-text--done {
+  text-decoration: line-through;
+}
