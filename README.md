@@ -1,3 +1,6 @@
 # Task Tracker
 
-A task tracker for small teams. Work in progress.
+## Development
+
+npm install
+npm run dev
