@@ -1,8 +1,17 @@
 .todo-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
   padding: 8px 12px;
   list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .todo-text--done {
   text-decoration: line-through;
+  color: var(--done);
 }
