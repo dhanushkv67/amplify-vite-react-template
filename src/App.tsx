@@ -63,6 +63,7 @@ export function App() {
               key={todo.id}
               data-testid="todo-item"
               className="todo-item"
+              style={{ padding: "8px 12px" }}
             >
               <input
                 type="checkbox"
