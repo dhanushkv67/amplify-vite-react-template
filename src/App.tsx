@@ -40,6 +40,7 @@ export function App() {
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           aria-label="New todo"
+          placeholder="What do you need to do?"
         />
         <button type="submit" data-testid="todo-submit">
           Add
