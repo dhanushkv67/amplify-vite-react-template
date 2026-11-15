@@ -78,11 +78,25 @@ body {
 
 .todo-form input[type="text"] {
   flex: 1;
+  min-width: 0;
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   background: var(--surface);
   color: var(--text);
+  text-align: left;
+}
+
+.todo-form input[type="text"]::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+
+@media (max-width: 480px) {
+  .todo-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 .todo-form button,
