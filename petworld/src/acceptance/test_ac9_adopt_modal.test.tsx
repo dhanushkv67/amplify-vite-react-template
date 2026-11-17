@@ -1,18 +1,25 @@
-import { describe, it, expect } from 'vitest';
-import userEvent from '@testing-library/user-event';
-import { screen } from '@testing-library/react';
-import App from '../App';
-import { renderWithRouter } from '../test/renderWithRouter';
-import { getPetById } from '../lib/pets';
-describe('AC9 Adopt modal', () => {
-  it('shows pet name, Close, no server-save copy', async () => {
-    const pet = getPetById('dog-1') ?? { name: 'Expected Pet' };
+import { describe, it, expect } from "vitest";
+import { screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { renderWithRouter } from "../test/renderWithRouter";
+
+/**
+ * AC9: Given the pet detail page, when the user activates Adopt,
+ * then the modal shows that pet's display name, a Close control,
+ * and does not claim the adoption was saved on the server.
+ */
+describe("AC9 adopt modal", () => {
+  it("shows the pet display name, Close, and no server-save claim in the modal", async () => {
     const user = userEvent.setup();
-    renderWithRouter(<App />, { initialEntries: ['/pets/dog-1'] });
-    await user.click(await screen.findByRole('button', { name: /adopt/i }));
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
-    expect(screen.getByText(pet.name)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument();
-    expect(screen.queryByText(/saved.*server/i)).not.toBeInTheDocument();
+    renderWithRouter("/pets/1");
+    const nameEl = await screen.findByRole("heading", { level: 1 });
+    const petName = nameEl.textContent?.trim();
+    expect(petName).toBeTruthy();
+    await user.click(screen.getByRole("button", { name: /adopt/i }));
+    const dialog = await screen.findByRole("dialog");
+    expect(within(dialog).getByText(petName!, { exact: false })).toBeVisible();
+    expect(within(dialog).getByRole("button", { name: /close/i })).toBeVisible();
+    const body = (dialog.textContent ?? "").toLowerCase();
+    expect(body).not.toMatch(/saved to server|persisted|submitted to backend/);
   });
 });

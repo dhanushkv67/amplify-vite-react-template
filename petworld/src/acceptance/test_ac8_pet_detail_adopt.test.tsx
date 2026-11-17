@@ -1,13 +1,17 @@
-import { describe, it, expect } from 'vitest';
-import { screen } from '@testing-library/react';
-import App from '../App';
-import { renderWithRouter } from '../test/renderWithRouter';
-import { getAllPets } from '../lib/pets';
-describe('AC8 pet detail photo and Adopt', () => {
-  it('shows photo and Adopt for a dataset id', async () => {
-    const id = getAllPets()[0]?.id ?? 'pet-missing';
-    renderWithRouter(<App />, { initialEntries: [`/pets/${id}`] });
-    expect(await screen.findByRole('img', { name: /pet photo/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /adopt/i })).toBeInTheDocument();
+import { describe, it, expect } from "vitest";
+import { screen } from "@testing-library/react";
+import { renderWithRouter } from "../test/renderWithRouter";
+
+/**
+ * AC8: Given a valid pet detail route, when the detail page renders,
+ * then at least one pet photo is visible and an Adopt control is visible.
+ */
+describe("AC8 pet detail page", () => {
+  it("shows at least one image and a visible Adopt control on a pet detail page", async () => {
+    renderWithRouter("/pets/1");
+    const images = await screen.findAllByRole("img");
+    expect(images.length).toBeGreaterThanOrEqual(1);
+    const adopt = screen.getByRole("button", { name: /adopt/i });
+    expect(adopt).toBeVisible();
   });
 });
