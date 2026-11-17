@@ -1,8 +1,20 @@
 {
-  "files": {
-    ".fresh-build.log": "17ea4119a4cbb72e52d9dfa451ef7e50be60a09ff8f4f290f598dfd0ee25abb7",
-    ".fresh-install.log": "33aa1ef73c744e323a34d415b6e7bf19a509c6dc41bcc297e9b75795a50e48b4",
-    ".fresh-test.log": "9d2c69b65642411b1bab15ec3316336dd069d81681c9cbbeb5ea7edade602401",
-    "README.md": "ee477edb9b66f3a355931ec7b305af93f392fee8bcacbf1d8157f69125b8b74f"
-  }
+  "unchangedOutsidePetworld": [
+    {
+      "path": ".fresh-build.log",
+      "sha256": "361ab1a5361ca7b3b585470fb576cf70f1364897e4c0ea84bf7870496fd761e4"
+    },
+    {
+      "path": ".fresh-install.log",
+      "sha256": "1a74591bed35a401a6f460c144bdbf101c11a3f249cc6c2200356004c67306bd"
+    },
+    {
+      "path": ".fresh-test.log",
+      "sha256": "a7f00b03631f61d7dcd91b64cda30b0d8636d4cd60a9a25004a26460639b8304"
+    },
+    {
+      "path": "README.md",
+      "sha256": "ee477edb9b66f3a355931ec7b305af93f392fee8bcacbf1d8157f69125b8b74f"
+    }
+  ]
 }
